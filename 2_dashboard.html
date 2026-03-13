@@ -1,0 +1,1855 @@
+<!DOCTYPE html>
+<!--
+╔══════════════════════════════════════════════╗
+║  PostOBT — Dashboard Page                   ║
+║  File : 2_dashboard.html                    ║
+║  CSS  : 2_dashboard.css                     ║
+║  JS   : 2_dashboard.js                      ║
+║  →    : 1_login.html  (after logout)        ║
+╚══════════════════════════════════════════════╝
+-->
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PostOBT — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="2_dashboard.css"/>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <nav>
+    <a class="nav-item" href="#" onclick="openDashboard(event)"><span class="icon"><i class="fa-solid fa-house"></i></span> Dashboard</a>
+    <a class="nav-item" href="#" onclick="openAnalyticsModal(event)"><span class="icon"><i class="fa-solid fa-chart-line"></i></span> Analytics</a>
+    <a class="nav-item" href="#" onclick="openInboxModal(event)"><span class="icon"><i class="fa-solid fa-inbox"></i></span> Inbox<span class="nav-badge">5</span></a>
+    <a class="nav-item" href="#" onclick="openPostModal(event)"><span class="icon"><i class="fa-solid fa-pen-to-square"></i></span> Create Post</a>
+    <a class="nav-item" href="#" onclick="openScheduleModal(event)"><span class="icon"><i class="fa-regular fa-calendar"></i></span> Schedule</a>
+    <span class="nav-label">AI Features</span>
+    <a class="nav-item ai-nav" href="#" onclick="openCaptionModal(event)"><span class="icon">✨</span> AI Caption Gen</a>
+    <a class="nav-item ai-nav" href="#" onclick="openInsightsModal(event)"><span class="icon">🧠</span> AI Insights</a>
+    <span class="nav-label">Account</span>
+    <a class="nav-item" href="#" onclick="openConnectionsModal(event)"><span class="icon"><i class="fa-solid fa-link"></i></span> Connections</a>
+    <a class="nav-item" href="#" onclick="openProfileModal(event)"><span class="icon"><i class="fa-regular fa-user"></i></span> Profile</a>
+    <a class="nav-item" href="#" onclick="openSettingsModal(event)"><span class="icon"><i class="fa-solid fa-gear"></i></span> Settings</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-chip">
+      <div class="avatar">JS</div>
+      <div class="user-info"><div class="user-name">Jay Sharma</div><div class="user-role">Creator · Pro</div></div>
+      <i class="fa-solid fa-ellipsis" style="color:var(--text-light);font-size:12px;"></i>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header>
+    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+      <div style="width:32px;height:32px;background:var(--primary);border-radius:9px;display:grid;place-items:center;color:#fff;font-size:14px;flex-shrink:0;"><i class="fa-solid fa-satellite-dish"></i></div>
+      <div style="font-size:19px;font-weight:700;letter-spacing:-.5px;white-space:nowrap;">Post<span style="color:var(--primary);">OBT</span></div>
+    </div>
+    <div class="header-title" id="headerTitle"></div>
+    <div class="search-bar" onclick="openSearchPanel(event)" style="cursor:pointer;">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" placeholder="Search posts, analytics…" id="headerSearchInput" onclick="openSearchPanel(event)" oninput="liveSearch(this.value)" autocomplete="off"/>
+    </div>
+    <div class="header-actions">
+      <div class="icon-btn" onclick="toggleNotifPanel(event)" id="notifBtn" title="Notifications">
+        <i class="fa-regular fa-bell"></i>
+        <div class="notif-dot-count" id="notifCount">5</div>
+      </div>
+      <div class="header-avatar" onclick="toggleProfileDropdown(event)" id="profileAvatarBtn" title="My Profile" style="cursor:pointer;">JS</div>
+    </div>
+  </header>
+
+  <!-- MENU BAR STRIP (below header, opens sidebar) -->
+  <div class="top-menubar">
+    <div class="menu-toggle-btn" id="menuToggleBtn" onclick="toggleSidebar()" title="Toggle menu">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="2" width="16" height="2" rx="1" fill="currentColor"/>
+        <rect x="0" y="7" width="16" height="2" rx="1" fill="currentColor"/>
+        <rect x="0" y="12" width="16" height="2" rx="1" fill="currentColor"/>
+      </svg>
+    </div>
+    <span class="top-menubar-label">Menu</span>
+  </div>
+
+  <div class="content" id="mainContent">
+    <!-- Dashboard content will be here -->
+    <div class="stat-grid">
+      <div class="stat-card" onclick="openAnalyticsModal()">
+        <div class="stat-top"><div class="stat-platform"><div class="plat-icon ig"><i class="fa-brands fa-instagram"></i></div> Instagram</div><div class="trend up"><i class="fa-solid fa-arrow-up"></i> 8.5%</div></div>
+        <div><div class="stat-val">124.3K</div><div class="stat-lbl">Followers</div></div>
+        <div class="stat-sub"><i class="fa-solid fa-arrow-up" style="color:var(--accent-green)"></i> +565 new followers today</div>
+      </div>
+      <div class="stat-card" onclick="openAnalyticsModal()">
+        <div class="stat-top"><div class="stat-platform"><div class="plat-icon yt"><i class="fa-brands fa-youtube"></i></div> YouTube</div><div class="trend up"><i class="fa-solid fa-arrow-up"></i> 12.0%</div></div>
+        <div><div class="stat-val">89.7K</div><div class="stat-lbl">Subscribers</div></div>
+        <div class="stat-sub"><i class="fa-solid fa-eye" style="color:var(--accent-red)"></i> +2,220 views today</div>
+      </div>
+      <div class="stat-card" onclick="openAnalyticsModal()">
+        <div class="stat-top"><div class="stat-platform"><div class="plat-icon tw"><i class="fa-brands fa-x-twitter"></i></div> Twitter / X</div><div class="trend up"><i class="fa-solid fa-arrow-up"></i> 5.2%</div></div>
+        <div><div class="stat-val">47.1K</div><div class="stat-lbl">Followers</div></div>
+        <div class="stat-sub"><i class="fa-solid fa-retweet" style="color:var(--accent-blue)"></i> +7,580 retweets today</div>
+      </div>
+      <div class="stat-card" onclick="openAnalyticsModal()">
+        <div class="stat-top"><div class="stat-platform"><div class="plat-icon eng"><i class="fa-solid fa-bolt"></i></div> Engagement</div><div class="trend up"><i class="fa-solid fa-arrow-up"></i> 23.4K</div></div>
+        <div><div class="stat-val">9.7%</div><div class="stat-lbl">Avg. Engagement Rate</div></div>
+        <div class="stat-sub"><i class="fa-regular fa-heart" style="color:var(--accent-pink)"></i> 12.8K likes · 3.2K comments</div>
+      </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="charts-row">
+      <div class="card">
+        <div class="card-hdr">
+          <div><div class="card-title">Cross Platform Engagement</div><div class="card-sub">Apr 1 – Apr 15, 2025</div></div>
+          <div class="period-tabs"><div class="ptab">7D</div><div class="ptab active">14D</div><div class="ptab">30D</div></div>
+        </div>
+        <div class="chart-wrap tall"><canvas id="engagementChart"></canvas></div>
+        <div class="leg">
+          <div class="leg-item"><div class="leg-dot" style="background:#e1306c"></div> Instagram</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#ff0000"></div> YouTube</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#1877f2"></div> Facebook</div>
+          <div class="leg-item"><div class="leg-dot" style="background:#1da1f2"></div> Twitter</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hdr"><div><div class="card-title">Follower Mix</div><div class="card-sub">Platform distribution</div></div></div>
+        <div class="chart-wrap med donut-wrap">
+          <canvas id="followerDonut" style="max-height:200px;"></canvas>
+          <div class="donut-center"><div class="big">261K</div><div class="sm">Total</div></div>
+        </div>
+        <div class="glist">
+          <div><div class="g-item-top"><div class="g-plat"><i class="fa-brands fa-instagram" style="color:#e1306c;"></i> Instagram</div><div class="g-pct" style="color:#e1306c;">47.6%</div></div><div class="g-bg"><div class="g-fill" style="width:47.6%;background:#e1306c;"></div></div></div>
+          <div><div class="g-item-top"><div class="g-plat"><i class="fa-brands fa-youtube" style="color:#ff0000;"></i> YouTube</div><div class="g-pct" style="color:#ff0000;">34.4%</div></div><div class="g-bg"><div class="g-fill" style="width:34.4%;background:#ff0000;"></div></div></div>
+          <div><div class="g-item-top"><div class="g-plat"><i class="fa-brands fa-x-twitter" style="color:#1da1f2;"></i> Twitter</div><div class="g-pct" style="color:#1da1f2;">18.0%</div></div><div class="g-bg"><div class="g-fill" style="width:18%;background:#1da1f2;"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="bottom-row">
+      <div class="card">
+        <div class="card-hdr">
+          <div><div class="card-title">Recent & Scheduled Posts</div><div class="card-sub">Your latest content queue</div></div>
+          <button class="sched-btn" onclick="openPostModal()"><i class="fa-solid fa-plus"></i> New Post</button>
+        </div>
+        <table class="posts-table">
+          <thead><tr><th>Platform</th><th>Post</th><th>Date</th><th>Likes</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><div class="pp-cell"><div class="plat-icon ig"><i class="fa-brands fa-instagram"></i></div> Reel</div></td><td class="post-cap">🔥 Sunday morning vlog — beach edition…</td><td class="post-time">Apr 15</td><td>320</td><td><span class="sbadge pub"><i class="fa-solid fa-circle-check"></i> Published</span></td></tr>
+            <tr><td><div class="pp-cell"><div class="plat-icon yt"><i class="fa-brands fa-youtube"></i></div> Short</div></td><td class="post-cap">New tutorial: editing workflow tips…</td><td class="post-time">Apr 14</td><td>280</td><td><span class="sbadge pub"><i class="fa-solid fa-circle-check"></i> Published</span></td></tr>
+            <tr><td><div class="pp-cell"><div class="plat-icon fb"><i class="fa-brands fa-facebook-f"></i></div> Photo</div></td><td class="post-cap">Behind the scenes from the studio…</td><td class="post-time">Apr 13</td><td>180</td><td><span class="sbadge pub"><i class="fa-solid fa-circle-check"></i> Published</span></td></tr>
+            <tr><td><div class="pp-cell"><div class="plat-icon tw"><i class="fa-brands fa-x-twitter"></i></div> Thread</div></td><td class="post-cap">5 things I wish I knew before going viral…</td><td class="post-time">Apr 16 <span class="best-badge">✨ Best</span></td><td>—</td><td><span class="sbadge sch"><i class="fa-regular fa-clock"></i> Scheduled</span></td></tr>
+            <tr><td><div class="pp-cell"><div class="plat-icon ig"><i class="fa-brands fa-instagram"></i></div> Story</div></td><td class="post-cap">Poll: which thumbnail do you prefer?…</td><td class="post-time">Apr 17</td><td>—</td><td><span class="sbadge dft"><i class="fa-regular fa-file"></i> Draft</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <div class="card-hdr"><div><div class="card-title">Recent Activity</div><div class="card-sub">Notifications across platforms</div></div><div style="font-size:12px;color:var(--primary);font-weight:600;cursor:pointer;" onclick="openActivityModal()">View all →</div></div>
+          <div class="activity-list">
+            <div class="act-item"><div class="act-icon follow"><i class="fa-solid fa-user-plus"></i></div><div class="act-body"><div class="act-text"><strong>Alex Sharma</strong> followed you on Instagram</div><div class="act-time">2 min ago</div></div></div>
+            <div class="act-item"><div class="act-icon comment"><i class="fa-brands fa-youtube"></i></div><div class="act-body"><div class="act-text"><strong>Sam</strong> commented: "Nice content 😊"</div><div class="act-time">14 min ago</div><button class="ai-reply-btn" onclick="openReplyModal('Sam','Nice content 😊','YouTube')">✨ AI Reply</button></div></div>
+            <div class="act-item"><div class="act-icon mention"><i class="fa-brands fa-x-twitter"></i></div><div class="act-body"><div class="act-text">Mentioned by <strong>@TechTrends</strong> in a tweet</div><div class="act-time">1 hr ago</div><button class="ai-reply-btn" onclick="openReplyModal('@TechTrends','Great insights from @JaySharma on going viral!','Twitter')">✨ AI Reply</button></div></div>
+            <div class="act-item"><div class="act-icon like"><i class="fa-regular fa-heart"></i></div><div class="act-body"><div class="act-text"><strong>Priya K.</strong> liked your Reel — 320 likes total</div><div class="act-time">2 hr ago</div></div></div>
+            <div class="act-item"><div class="act-icon share"><i class="fa-solid fa-retweet"></i></div><div class="act-body"><div class="act-text">Your thread got <strong>847 retweets</strong> in the last hour</div><div class="act-time">3 hr ago</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SETTINGS MODAL (with Help, Link Page, Notifications, Dark Mode, Logout) -->
+<!-- ═══════════════════════════════ -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal settings-modal">
+    <div class="modal-hdr">
+      <div><div class="modal-title">⚙️ Settings</div><div class="modal-subtitle">Manage your account preferences</div></div>
+      <div class="modal-close" onclick="closeModal('settingsModal')"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-flex">
+        <!-- Settings Sidebar -->
+        <div class="settings-sidebar">
+          <div class="nav-item active" onclick="switchSettingsTab(this, 'help')">
+            <span class="icon"><i class="fa-solid fa-question-circle"></i></span> Help & Support
+          </div>
+          <div class="nav-item" onclick="switchSettingsTab(this, 'links')">
+            <span class="icon"><i class="fa-solid fa-link"></i></span> Link Pages
+          </div>
+          <div class="nav-item" onclick="switchSettingsTab(this, 'notifications')">
+            <span class="icon"><i class="fa-regular fa-bell"></i></span> Notifications
+          </div>
+          <div class="nav-item" onclick="switchSettingsTab(this, 'appearance')">
+            <span class="icon"><i class="fa-solid fa-moon"></i></span> Appearance
+          </div>
+          <div class="nav-item" onclick="switchSettingsTab(this, 'logout')" style="color: var(--accent-red);">
+            <span class="icon"><i class="fa-solid fa-sign-out-alt"></i></span> Logout
+          </div>
+        </div>
+
+        <!-- Settings Content -->
+        <div class="settings-content">
+          <!-- Help & Support Section -->
+          <div class="settings-section active" id="help-section">
+            <h3 style="margin-bottom: 20px; font-size: 18px;">Help & Support</h3>
+            
+            <div class="help-item" onclick="openHelpArticle('getting-started')">
+              <div class="help-icon"><i class="fa-solid fa-rocket"></i></div>
+              <div class="help-item-info">
+                <h4>Getting Started Guide</h4>
+                <p>Learn the basics of using PostOBT</p>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color: var(--text-light);"></i>
+            </div>
+            
+            <div class="help-item" onclick="openHelpArticle('faq')">
+              <div class="help-icon"><i class="fa-regular fa-circle-question"></i></div>
+              <div class="help-item-info">
+                <h4>FAQ</h4>
+                <p>Frequently asked questions</p>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color: var(--text-light);"></i>
+            </div>
+            
+            <div class="help-item" onclick="openHelpArticle('contact')">
+              <div class="help-icon"><i class="fa-regular fa-envelope"></i></div>
+              <div class="help-item-info">
+                <h4>Contact Support</h4>
+                <p>Get help from our team</p>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color: var(--text-light);"></i>
+            </div>
+            
+            <div class="help-item" onclick="openHelpArticle('video-tutorials')">
+              <div class="help-icon"><i class="fa-brands fa-youtube"></i></div>
+              <div class="help-item-info">
+                <h4>Video Tutorials</h4>
+                <p>Watch step-by-step guides</p>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color: var(--text-light);"></i>
+            </div>
+            
+            <div style="margin-top: 24px; padding: 16px; background: var(--primary-light); border-radius: 12px;">
+              <p style="font-size: 13px; color: var(--text-mid);">
+                <i class="fa-regular fa-clock" style="color: var(--primary); margin-right: 8px;"></i>
+                Average response time: 2-4 hours
+              </p>
+            </div>
+          </div>
+
+          <!-- Link Pages Section -->
+          <div class="settings-section" id="links-section">
+            <h3 style="margin-bottom: 20px; font-size: 18px;">Link Pages</h3>
+            
+            <div class="link-item">
+              <div class="link-item-left">
+                <div class="link-icon"><i class="fa-brands fa-instagram"></i></div>
+                <div class="link-item-info">
+                  <h4>Instagram</h4>
+                  <a href="#" onclick="copyLink('https://instagram.com/jaysharma')">instagram.com/jaysharma</a>
+                </div>
+              </div>
+              <button class="res-btn" onclick="copyLink('https://instagram.com/jaysharma')">
+                <i class="fa-regular fa-copy"></i> Copy
+              </button>
+            </div>
+            
+            <div class="link-item">
+              <div class="link-item-left">
+                <div class="link-icon"><i class="fa-brands fa-youtube"></i></div>
+                <div class="link-item-info">
+                  <h4>YouTube</h4>
+                  <a href="#" onclick="copyLink('https://youtube.com/@jaysharma')">youtube.com/@jaysharma</a>
+                </div>
+              </div>
+              <button class="res-btn" onclick="copyLink('https://youtube.com/@jaysharma')">
+                <i class="fa-regular fa-copy"></i> Copy
+              </button>
+            </div>
+            
+            <div class="link-item">
+              <div class="link-item-left">
+                <div class="link-icon"><i class="fa-brands fa-x-twitter"></i></div>
+                <div class="link-item-info">
+                  <h4>Twitter / X</h4>
+                  <a href="#" onclick="copyLink('https://twitter.com/jaysharma')">twitter.com/jaysharma</a>
+                </div>
+              </div>
+              <button class="res-btn" onclick="copyLink('https://twitter.com/jaysharma')">
+                <i class="fa-regular fa-copy"></i> Copy
+              </button>
+            </div>
+            
+            <div class="link-item">
+              <div class="link-item-left">
+                <div class="link-icon"><i class="fa-brands fa-facebook-f"></i></div>
+                <div class="link-item-info">
+                  <h4>Facebook</h4>
+                  <a href="#" onclick="copyLink('https://facebook.com/jaysharma')">facebook.com/jaysharma</a>
+                </div>
+              </div>
+              <button class="res-btn" onclick="copyLink('https://facebook.com/jaysharma')">
+                <i class="fa-regular fa-copy"></i> Copy
+              </button>
+            </div>
+            
+            <div class="link-item">
+              <div class="link-item-left">
+                <div class="link-icon"><i class="fa-solid fa-globe"></i></div>
+                <div class="link-item-info">
+                  <h4>Portfolio Website</h4>
+                  <a href="#" onclick="copyLink('https://jaysharma.com')">jaysharma.com</a>
+                </div>
+              </div>
+              <button class="res-btn" onclick="copyLink('https://jaysharma.com')">
+                <i class="fa-regular fa-copy"></i> Copy
+              </button>
+            </div>
+            
+            <button class="send-btn" style="margin-top: 20px;" onclick="addNewLink()">
+              <i class="fa-solid fa-plus"></i> Add New Link
+            </button>
+          </div>
+
+          <!-- Notifications Section -->
+          <div class="settings-section" id="notifications-section">
+            <h3 style="margin-bottom: 20px; font-size: 18px;">Notification Preferences</h3>
+            
+            <div class="notification-item">
+              <div class="notification-item-left">
+                <div class="notification-icon"><i class="fa-regular fa-bell"></i></div>
+                <div class="notification-item-info">
+                  <h4>Push Notifications</h4>
+                  <p>Receive notifications on your device</p>
+                </div>
+              </div>
+              <div class="toggle-switch active" onclick="toggleNotification(this, 'push')">
+                <div class="toggle-slider"></div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-item-left">
+                <div class="notification-icon"><i class="fa-regular fa-envelope"></i></div>
+                <div class="notification-item-info">
+                  <h4>Email Notifications</h4>
+                  <p>Receive updates via email</p>
+                </div>
+              </div>
+              <div class="toggle-switch active" onclick="toggleNotification(this, 'email')">
+                <div class="toggle-slider"></div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-item-left">
+                <div class="notification-icon"><i class="fa-brands fa-instagram"></i></div>
+                <div class="notification-item-info">
+                  <h4>Instagram Activity</h4>
+                  <p>New followers, comments, likes</p>
+                </div>
+              </div>
+              <div class="toggle-switch active" onclick="toggleNotification(this, 'instagram')">
+                <div class="toggle-slider"></div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-item-left">
+                <div class="notification-icon"><i class="fa-brands fa-youtube"></i></div>
+                <div class="notification-item-info">
+                  <h4>YouTube Activity</h4>
+                  <p>New subscribers, comments</p>
+                </div>
+              </div>
+              <div class="toggle-switch active" onclick="toggleNotification(this, 'youtube')">
+                <div class="toggle-slider"></div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-item-left">
+                <div class="notification-icon"><i class="fa-brands fa-x-twitter"></i></div>
+                <div class="notification-item-info">
+                  <h4>Twitter Activity</h4>
+                  <p>Mentions, retweets, new followers</p>
+                </div>
+              </div>
+              <div class="toggle-switch" onclick="toggleNotification(this, 'twitter')">
+                <div class="toggle-slider"></div>
+              </div>
+            </div>
+            
+            <div class="notification-item">
+              <div class="notification-item-left">
+                <div class="notification-icon"><i class="fa-brands fa-facebook-f"></i></div>
+                <div class="notification-item-info">
+                  <h4>Facebook Activity</h4>
+                  <p>New messages, comments, likes</p>
+                </div>
+              </div>
+              <div class="toggle-switch" onclick="toggleNotification(this, 'facebook')">
+                <div class="toggle-slider"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Appearance Section (Dark Mode) -->
+          <div class="settings-section" id="appearance-section">
+            <h3 style="margin-bottom: 20px; font-size: 18px;">Appearance</h3>
+            
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-item-icon"><i class="fa-solid fa-moon"></i></div>
+                <div class="settings-item-info">
+                  <h4>Dark Mode</h4>
+                  <p>Switch between light and dark theme</p>
+                </div>
+              </div>
+              <div class="toggle-switch" id="darkModeToggle" onclick="toggleDarkMode(this)">
+                <div class="toggle-slider"></div>
+              </div>
+            </div>
+            
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-item-icon"><i class="fa-solid fa-palette"></i></div>
+                <div class="settings-item-info">
+                  <h4>Accent Color</h4>
+                  <p>Customize your theme color</p>
+                </div>
+              </div>
+              <select class="fselect" style="width: 100px;" onchange="changeAccentColor(this.value)">
+                <option value="#7c5cfc" selected>Purple</option>
+                <option value="#e1306c">Pink</option>
+                <option value="#ff0000">Red</option>
+                <option value="#1877f2">Blue</option>
+                <option value="#22c55e">Green</option>
+              </select>
+            </div>
+            
+            <div class="settings-item">
+              <div class="settings-item-left">
+                <div class="settings-item-icon"><i class="fa-solid fa-text-height"></i></div>
+                <div class="settings-item-info">
+                  <h4>Font Size</h4>
+                  <p>Adjust text size</p>
+                </div>
+              </div>
+              <select class="fselect" style="width: 100px;" onchange="changeFontSize(this.value)">
+                <option value="14px">Small</option>
+                <option value="16px" selected>Medium</option>
+                <option value="18px">Large</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Logout Section -->
+          <div class="settings-section" id="logout-section">
+            <h3 style="margin-bottom: 20px; font-size: 18px;">Logout</h3>
+            
+            <div style="text-align: center; padding: 20px;">
+              <div style="width: 80px; height: 80px; border-radius: 50%; background: var(--primary-light); display: grid; place-items: center; margin: 0 auto 20px;">
+                <i class="fa-solid fa-sign-out-alt" style="font-size: 32px; color: var(--primary);"></i>
+              </div>
+              
+              <h4 style="margin-bottom: 10px;">Are you sure you want to logout?</h4>
+              <p style="color: var(--text-light); margin-bottom: 24px; font-size: 13px;">You'll need to login again to access your account</p>
+              
+              <div style="display: flex; gap: 12px;">
+              <button class="res-btn" style="flex: 1; padding: 12px;" onclick="closeModal('settingsModal')">
+  Cancel
+</button>
+                <button class="logout-btn" style="flex: 1; margin-top: 0;" onclick="logoutUser()">
+                  <i class="fa-solid fa-sign-out-alt"></i> Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- CONNECTIONS MODAL (exact design as image) -->
+<!-- ═══════════════════════════════ -->
+<div class="modal-overlay" id="connectionsModal">
+  <div class="modal small-modal">
+    <div class="modal-hdr">
+      <div><div class="modal-title">🔗 Connect Accounts</div><div class="modal-subtitle">Link your social media profiles</div></div>
+      <div class="modal-close" onclick="closeModal('connectionsModal')"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="connections-list">
+        <!-- Facebook -->
+        <div class="connection-item">
+          <div class="connection-left">
+            <div class="connection-icon facebook">
+              <i class="fa-brands fa-facebook-f"></i>
+            </div>
+            <div class="connection-info">
+              <h3>Facebook</h3>
+              <p>Connect to share posts and stories</p>
+            </div>
+          </div>
+          <button class="connect-btn facebook" onclick="connectPlatform(this, 'facebook')">
+            <i class="fa-brands fa-facebook-f"></i>
+            <span>Connect</span>
+          </button>
+        </div>
+        
+        <!-- Twitter / X -->
+        <div class="connection-item">
+          <div class="connection-left">
+            <div class="connection-icon twitter">
+              <i class="fa-brands fa-x-twitter"></i>
+            </div>
+            <div class="connection-info">
+              <h3>Twitter / X</h3>
+              <p>Connect to tweet and engage</p>
+            </div>
+          </div>
+          <button class="connect-btn twitter" onclick="connectPlatform(this, 'twitter')">
+            <i class="fa-brands fa-x-twitter"></i>
+            <span>Connect</span>
+          </button>
+        </div>
+        
+        <!-- LinkedIn -->
+        <div class="connection-item">
+          <div class="connection-left">
+            <div class="connection-icon linkedin">
+              <i class="fa-brands fa-linkedin-in"></i>
+            </div>
+            <div class="connection-info">
+              <h3>LinkedIn</h3>
+              <p>Connect for professional content</p>
+            </div>
+          </div>
+          <button class="connect-btn linkedin" onclick="connectPlatform(this, 'linkedin')">
+            <i class="fa-brands fa-linkedin-in"></i>
+            <span>Connect</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Info text -->
+      <div style="margin-top: 24px; padding: 16px; background: var(--primary-light); border-radius: 12px; font-size: 13px; color: var(--text-mid);">
+        <i class="fa-solid fa-shield" style="color: var(--primary); margin-right: 8px;"></i>
+        Your credentials are encrypted and never stored. We use official OAuth for all connections.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- ANALYTICS MODAL (NEW) -->
+<!-- ═══════════════════════════════ -->
+<div class="modal-overlay" id="analyticsModal">
+  <div class="modal" style="max-width: 1000px;">
+    <div class="modal-hdr">
+      <div><div class="modal-title">📊 Advanced Analytics</div><div class="modal-subtitle">Deep-dive metrics across all platforms with date comparison</div></div>
+      <div class="modal-close" onclick="closeModal('analyticsModal')"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="modal-body">
+      <!-- Date Range Picker -->
+      <div class="analytics-header">
+        <div class="analytics-tabs">
+          <div class="analytics-tab active" onclick="switchAnalyticsTab(this, 'overview')">
+            <i class="fa-solid fa-chart-pie"></i> Overview
+          </div>
+          <div class="analytics-tab" onclick="switchAnalyticsTab(this, 'platforms')">
+            <i class="fa-brands fa-instagram"></i> Platforms
+          </div>
+          <div class="analytics-tab" onclick="switchAnalyticsTab(this, 'engagement')">
+            <i class="fa-regular fa-heart"></i> Engagement
+          </div>
+          <div class="analytics-tab" onclick="switchAnalyticsTab(this, 'comparison')">
+            <i class="fa-solid fa-arrow-right-arrow-left"></i> Comparison
+            <span class="insight-badge">New</span>
+          </div>
+        </div>
+        <div class="date-range-picker">
+          <input type="date" class="date-input" id="startDate" value="2025-04-01">
+          <span class="date-separator">→</span>
+          <input type="date" class="date-input" id="endDate" value="2025-04-15">
+          <button class="apply-btn" onclick="updateAnalytics()"><i class="fa-solid fa-rotate"></i> Apply</button>
+        </div>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="analytics-grid">
+        <div class="analytics-stat-card">
+          <div class="analytics-stat-icon"><i class="fa-regular fa-heart"></i></div>
+          <div class="analytics-stat-value" id="totalLikes">128.4K</div>
+          <div class="analytics-stat-label">Total Likes</div>
+          <span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-up"></i> +12.3%</span>
+        </div>
+        <div class="analytics-stat-card">
+          <div class="analytics-stat-icon"><i class="fa-regular fa-comment"></i></div>
+          <div class="analytics-stat-value" id="totalComments">32.8K</div>
+          <div class="analytics-stat-label">Total Comments</div>
+          <span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-up"></i> +8.7%</span>
+        </div>
+        <div class="analytics-stat-card">
+          <div class="analytics-stat-icon"><i class="fa-solid fa-retweet"></i></div>
+          <div class="analytics-stat-value" id="totalShares">15.2K</div>
+          <div class="analytics-stat-label">Total Shares</div>
+          <span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-up"></i> +23.1%</span>
+        </div>
+      </div>
+
+      <!-- Platform Comparison Pie Charts -->
+      <div class="analytics-charts-row">
+        <div class="card" style="padding: 16px;">
+          <div class="card-hdr" style="margin-bottom: 10px;">
+            <div class="card-title">Likes Distribution</div>
+            <div class="card-sub">By platform</div>
+          </div>
+          <div class="chart-wrap med" style="height: 180px;">
+            <canvas id="likesPieChart"></canvas>
+          </div>
+          <div class="leg" style="justify-content: center;">
+            <div class="leg-item"><div class="leg-dot" style="background:#e1306c"></div> IG: 58.2K</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#ff0000"></div> YT: 42.1K</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#1da1f2"></div> TW: 28.1K</div>
+          </div>
+        </div>
+        <div class="card" style="padding: 16px;">
+          <div class="card-hdr" style="margin-bottom: 10px;">
+            <div class="card-title">Comments Distribution</div>
+            <div class="card-sub">By platform</div>
+          </div>
+          <div class="chart-wrap med" style="height: 180px;">
+            <canvas id="commentsPieChart"></canvas>
+          </div>
+          <div class="leg" style="justify-content: center;">
+            <div class="leg-item"><div class="leg-dot" style="background:#e1306c"></div> IG: 14.2K</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#ff0000"></div> YT: 11.8K</div>
+            <div class="leg-item"><div class="leg-dot" style="background:#1da1f2"></div> TW: 6.8K</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Platform Table -->
+      <div class="card" style="padding: 16px; margin-top: 16px;">
+        <div class="card-hdr">
+          <div class="card-title">Platform Performance</div>
+          <div class="card-sub">Detailed metrics per platform</div>
+        </div>
+        <table class="analytics-table">
+          <thead>
+            <tr>
+              <th>Platform</th>
+              <th>Likes</th>
+              <th>Comments</th>
+              <th>Shares</th>
+              <th>Engagement Rate</th>
+              <th>Growth</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="platform-badge ig"><i class="fa-brands fa-instagram"></i> Instagram</span></td>
+              <td><strong>58.2K</strong> <span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-up"></i> 9.2%</span></td>
+              <td>14.2K</td>
+              <td>6.8K</td>
+              <td>8.7%</td>
+              <td><span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-up"></i> +8.5%</span></td>
+            </tr>
+            <tr>
+              <td><span class="platform-badge yt"><i class="fa-brands fa-youtube"></i> YouTube</span></td>
+              <td><strong>42.1K</strong> <span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-up"></i> 7.4%</span></td>
+              <td>11.8K</td>
+              <td>4.2K</td>
+              <td>6.2%</td>
+              <td><span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-up"></i> +12.0%</span></td>
+            </tr>
+            <tr>
+              <td><span class="platform-badge tw"><i class="fa-brands fa-x-twitter"></i> Twitter/X</span></td>
+              <td><strong>28.1K</strong> <span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-up"></i> 15.8%</span></td>
+              <td>6.8K</td>
+              <td>4.2K</td>
+              <td>4.1%</td>
+              <td><span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-up"></i> +5.2%</span></td>
+            </tr>
+            <tr>
+              <td><span class="platform-badge fb"><i class="fa-brands fa-facebook-f"></i> Facebook</span></td>
+              <td><strong>12.4K</strong> <span class="trend-indicator trend-down"><i class="fa-solid fa-arrow-down"></i> -2.1%</span></td>
+              <td>3.2K</td>
+              <td>1.8K</td>
+              <td>2.3%</td>
+              <td><span class="trend-indicator trend-down"><i class="fa-solid fa-arrow-down"></i> -1.2%</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Date Comparison Section -->
+      <div class="card" style="padding: 16px; margin-top: 16px;">
+        <div class="card-hdr">
+          <div class="card-title">Period Comparison</div>
+          <div class="card-sub">Comparing selected date range with previous period</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <div>
+            <div style="font-size: 13px; color: var(--text-mid); margin-bottom: 8px;">Current Period: Apr 1 - Apr 15</div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span>Likes:</span>
+              <span><strong>128.4K</strong> <span class="trend-indicator trend-up">+12.3%</span></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span>Comments:</span>
+              <span><strong>32.8K</strong> <span class="trend-indicator trend-up">+8.7%</span></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span>Shares:</span>
+              <span><strong>15.2K</strong> <span class="trend-indicator trend-up">+23.1%</span></span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size: 13px; color: var(--text-mid); margin-bottom: 8px;">Previous Period: Mar 16 - Mar 31</div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span>Likes:</span>
+              <span><strong>114.3K</strong></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span>Comments:</span>
+              <span><strong>30.2K</strong></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span>Shares:</span>
+              <span><strong>12.3K</strong></span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 16px; padding: 12px; background: var(--primary-light); border-radius: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-chart-line" style="color: var(--primary);"></i>
+            <span style="font-size: 13px; color: var(--text-dark);"><strong>Insight:</strong> Your engagement is up 12.3% compared to previous period! Instagram Reels and YouTube Shorts are performing exceptionally well.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- INBOX MODAL -->
+<!-- ═══════════════════════════════ -->
+<div class="modal-overlay" id="inboxModal">
+  <div class="modal" style="max-width: 800px;">
+    <div class="modal-hdr">
+      <div><div class="modal-title">📬 Unified Inbox</div><div class="modal-subtitle">All your messages across platforms in one place</div></div>
+      <div class="modal-close" onclick="closeModal('inboxModal')"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="modal-body">
+      <!-- Inbox Header -->
+      <div class="inbox-header">
+        <div class="inbox-tabs">
+          <div class="inbox-tab active" onclick="switchInboxTab(this, 'all')">
+            <i class="fa-regular fa-message"></i> All Messages
+            <span class="count">24</span>
+          </div>
+          <div class="inbox-tab" onclick="switchInboxTab(this, 'unread')">
+            <i class="fa-regular fa-envelope"></i> Unread
+            <span class="count">5</span>
+          </div>
+          <div class="inbox-tab" onclick="switchInboxTab(this, 'mentions')">
+            <i class="fa-regular fa-at"></i> Mentions
+            <span class="count">3</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Platform Filters -->
+      <div class="platform-filters">
+        <div class="platform-filter active" onclick="filterInbox(this, 'all')"><i class="fa-solid fa-globe"></i></div>
+        <div class="platform-filter ig" onclick="filterInbox(this, 'instagram')"><i class="fa-brands fa-instagram"></i></div>
+        <div class="platform-filter yt" onclick="filterInbox(this, 'youtube')"><i class="fa-brands fa-youtube"></i></div>
+        <div class="platform-filter tw" onclick="filterInbox(this, 'twitter')"><i class="fa-brands fa-x-twitter"></i></div>
+        <div class="platform-filter fb" onclick="filterInbox(this, 'facebook')"><i class="fa-brands fa-facebook-f"></i></div>
+      </div>
+
+      <!-- Inbox Stats -->
+      <div class="inbox-stats">
+        <div class="inbox-stat">
+          <div class="inbox-stat-value">12</div>
+          <div class="inbox-stat-label">New Messages</div>
+        </div>
+        <div class="inbox-stat">
+          <div class="inbox-stat-value">8</div>
+          <div class="inbox-stat-label">Awaiting Reply</div>
+        </div>
+        <div class="inbox-stat">
+          <div class="inbox-stat-value">3</div>
+          <div class="inbox-stat-label">Mentions</div>
+        </div>
+        <div class="inbox-stat">
+          <div class="inbox-stat-value">2h</div>
+          <div class="inbox-stat-label">Avg Response</div>
+        </div>
+      </div>
+
+      <!-- Inbox Search -->
+      <div class="inbox-search">
+        <input type="text" placeholder="Search messages, mentions, comments..." id="inboxSearch">
+        <button onclick="searchInbox()"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+
+      <!-- Inbox List -->
+      <div class="inbox-list" id="inboxList">
+        <!-- Instagram Messages -->
+        <div class="inbox-item unread" data-platform="instagram" data-type="message" onclick="openMessage(this)">
+          <div class="inbox-item-avatar"><i class="fa-brands fa-instagram"></i></div>
+          <div class="inbox-item-content">
+            <div class="inbox-item-header">
+              <div class="inbox-item-name">
+                @travelwithsam
+                <span class="inbox-item-platform ig"><i class="fa-brands fa-instagram"></i></span>
+              </div>
+              <div class="inbox-item-time">5 min ago</div>
+            </div>
+            <div class="inbox-item-message unread">Hey! Love your content! Would you be interested in a collaboration? We're planning a trip to Bali next month and think your style would be perfect! 🌴✨</div>
+            <div class="inbox-item-footer">
+              <span class="inbox-item-type">Direct Message</span>
+              <div class="inbox-item-actions">
+                <div class="inbox-item-action" onclick="event.stopPropagation(); markAsRead(this)"><i class="fa-regular fa-envelope-open"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); openReplyModalFromInbox(this)"><i class="fa-regular fa-reply"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); archiveMessage(this)"><i class="fa-regular fa-bookmark"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- YouTube Comment -->
+        <div class="inbox-item unread" data-platform="youtube" data-type="comment" onclick="openMessage(this)">
+          <div class="inbox-item-avatar"><i class="fa-brands fa-youtube"></i></div>
+          <div class="inbox-item-content">
+            <div class="inbox-item-header">
+              <div class="inbox-item-name">
+                TechGuru
+                <span class="inbox-item-platform yt"><i class="fa-brands fa-youtube"></i></span>
+              </div>
+              <div class="inbox-item-time">15 min ago</div>
+            </div>
+            <div class="inbox-item-message unread">This tutorial was incredibly helpful! I've been struggling with my editing workflow for months. Would love to see more content like this! 🔥</div>
+            <div class="inbox-item-footer">
+              <span class="inbox-item-type">Comment</span>
+              <div class="inbox-item-actions">
+                <div class="inbox-item-action" onclick="event.stopPropagation(); markAsRead(this)"><i class="fa-regular fa-envelope-open"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); openReplyModalFromInbox(this)"><i class="fa-regular fa-reply"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); likeComment(this)"><i class="fa-regular fa-heart"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Twitter Mention -->
+        <div class="inbox-item" data-platform="twitter" data-type="mention" onclick="openMessage(this)">
+          <div class="inbox-item-avatar"><i class="fa-brands fa-x-twitter"></i></div>
+          <div class="inbox-item-content">
+            <div class="inbox-item-header">
+              <div class="inbox-item-name">
+                @contentcreator
+                <span class="inbox-item-platform tw"><i class="fa-brands fa-x-twitter"></i></span>
+              </div>
+              <div class="inbox-item-time">1 hr ago</div>
+            </div>
+            <div class="inbox-item-message">Just read your thread on going viral. Pure gold! @JaySharma you're killing it with these insights! 🚀</div>
+            <div class="inbox-item-footer">
+              <span class="inbox-item-type">Mention</span>
+              <div class="inbox-item-actions">
+                <div class="inbox-item-action" onclick="event.stopPropagation(); markAsRead(this)"><i class="fa-regular fa-envelope-open"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); openReplyModalFromInbox(this)"><i class="fa-regular fa-reply"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); retweetMessage(this)"><i class="fa-solid fa-retweet"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Facebook Message -->
+        <div class="inbox-item" data-platform="facebook" data-type="message" onclick="openMessage(this)">
+          <div class="inbox-item-avatar"><i class="fa-brands fa-facebook-f"></i></div>
+          <div class="inbox-item-content">
+            <div class="inbox-item-header">
+              <div class="inbox-item-name">
+                Sarah Chen
+                <span class="inbox-item-platform fb"><i class="fa-brands fa-facebook-f"></i></span>
+              </div>
+              <div class="inbox-item-time">3 hr ago</div>
+            </div>
+            <div class="inbox-item-message">Hi Jay! I run a photography community and would love to feature your work. Are you available for a guest post next week? 📸</div>
+            <div class="inbox-item-footer">
+              <span class="inbox-item-type">Message</span>
+              <div class="inbox-item-actions">
+                <div class="inbox-item-action" onclick="event.stopPropagation(); markAsRead(this)"><i class="fa-regular fa-envelope-open"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); openReplyModalFromInbox(this)"><i class="fa-regular fa-reply"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); archiveMessage(this)"><i class="fa-regular fa-bookmark"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Instagram Comment -->
+        <div class="inbox-item unread" data-platform="instagram" data-type="comment" onclick="openMessage(this)">
+          <div class="inbox-item-avatar"><i class="fa-brands fa-instagram"></i></div>
+          <div class="inbox-item-content">
+            <div class="inbox-item-header">
+              <div class="inbox-item-name">
+                @photography_lover
+                <span class="inbox-item-platform ig"><i class="fa-brands fa-instagram"></i></span>
+              </div>
+              <div class="inbox-item-time">5 hr ago</div>
+            </div>
+            <div class="inbox-item-message unread">The colors in this shot are incredible! What camera do you use? Would love to know your editing process 🎨</div>
+            <div class="inbox-item-footer">
+              <span class="inbox-item-type">Comment</span>
+              <div class="inbox-item-actions">
+                <div class="inbox-item-action" onclick="event.stopPropagation(); markAsRead(this)"><i class="fa-regular fa-envelope-open"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); openReplyModalFromInbox(this)"><i class="fa-regular fa-reply"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); likeComment(this)"><i class="fa-regular fa-heart"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- YouTube Message -->
+        <div class="inbox-item" data-platform="youtube" data-type="message" onclick="openMessage(this)">
+          <div class="inbox-item-avatar"><i class="fa-brands fa-youtube"></i></div>
+          <div class="inbox-item-content">
+            <div class="inbox-item-header">
+              <div class="inbox-item-name">
+                MusicProducerMike
+                <span class="inbox-item-platform yt"><i class="fa-brands fa-youtube"></i></span>
+              </div>
+              <div class="inbox-item-time">1 day ago</div>
+            </div>
+            <div class="inbox-item-message">Love your channel! I'm working on a collaboration video about creator workflows. Would you be interested in doing a collab? 🎵</div>
+            <div class="inbox-item-footer">
+              <span class="inbox-item-type">Message</span>
+              <div class="inbox-item-actions">
+                <div class="inbox-item-action" onclick="event.stopPropagation(); markAsRead(this)"><i class="fa-regular fa-envelope-open"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); openReplyModalFromInbox(this)"><i class="fa-regular fa-reply"></i></div>
+                <div class="inbox-item-action" onclick="event.stopPropagation(); archiveMessage(this)"><i class="fa-regular fa-bookmark"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="inbox-divider">
+        <span>End of messages</span>
+      </div>
+
+      <!-- Quick Reply Area -->
+      <div style="margin-top: 16px; display: flex; gap: 8px;">
+        <button class="res-btn" style="flex:1;" onclick="markAllAsRead()"><i class="fa-regular fa-envelope-open"></i> Mark All Read</button>
+        <button class="res-btn primary" style="flex:1;" onclick="exportInbox()"><i class="fa-regular fa-file-excel"></i> Export</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- MODAL 2: Create Post (with file upload) -->
+<!-- ═══════════════════════════════ -->
+<div class="modal-overlay" id="postModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div><div class="modal-title">📝 Create Post</div><div class="modal-subtitle">Upload media and publish to your platforms</div></div>
+      <div class="modal-close" onclick="closeModal('postModal')"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="flabel">Platforms</label>
+        <div class="plat-pills" id="postPlatPills">
+          <div class="ppill sig" data-p="Instagram" onclick="togglePill(this)"><i class="fa-brands fa-instagram"></i> Instagram</div>
+          <div class="ppill" data-p="YouTube" onclick="togglePill(this)"><i class="fa-brands fa-youtube"></i> YouTube</div>
+          <div class="ppill" data-p="Twitter" onclick="togglePill(this)"><i class="fa-brands fa-x-twitter"></i> Twitter</div>
+          <div class="ppill" data-p="Facebook" onclick="togglePill(this)"><i class="fa-brands fa-facebook-f"></i> Facebook</div>
+        </div>
+      </div>
+
+      <!-- FILE UPLOAD SECTION -->
+      <div class="form-group">
+        <label class="flabel">Upload Media</label>
+        <div class="upload-box" id="uploadBox" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+          <input type="file" id="fileInput" multiple accept="image/*,video/*,.gif" onchange="handleFileSelect(event)"/>
+          <div class="upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+          <div class="upload-title">Drop your files here or click to browse</div>
+          <div class="upload-sub">Supports images, videos & GIFs</div>
+          <div class="upload-types">
+            <span class="upload-type-badge">JPG</span>
+            <span class="upload-type-badge">PNG</span>
+            <span class="upload-type-badge">GIF</span>
+            <span class="upload-type-badge">MP4</span>
+            <span class="upload-type-badge">MOV</span>
+            <span class="upload-type-badge">WebP</span>
+          </div>
+        </div>
+        <div class="upload-preview" id="uploadPreview"></div>
+
+        <div class="upload-or">or add via URL</div>
+        <div class="url-input-row">
+          <input class="finput" id="mediaUrlInput" type="url" placeholder="Paste image or video URL…"/>
+          <button class="url-btn" onclick="addMediaFromUrl()"><i class="fa-solid fa-link"></i> Add</button>
+        </div>
+      </div>
+
+      <div class="form-group"><label class="flabel">Post Caption</label><textarea class="ftextarea" id="postModalCaption" placeholder="Write your caption here…"></textarea></div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0;"><label class="flabel">Post Type</label><select class="fselect"><option>Photo</option><option>Video / Reel</option><option>Story</option><option>Thread</option><option>Short</option></select></div>
+        <div class="form-group" style="margin-bottom:0;"><label class="flabel">Schedule Time</label><input class="finput" type="datetime-local"/></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button class="res-btn" style="flex:1;padding:11px;font-size:14px;" onclick="closeModal('postModal')">Save Draft</button>
+        <button class="send-btn" style="margin:0;flex:1;" onclick="submitPost()"><i class="fa-solid fa-square-plus"></i> Post Now</button>
+        <button class="send-btn" style="margin:0;flex:1;" onclick="schedulePostNow()"><i class="fa-solid fa-calendar-check"></i> Schedule</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- MODAL 3: AI Caption Generator  -->
+<!-- ═══════════════════════════════ -->
+<div class="modal-overlay" id="captionModal">
+  <div class="modal">
+    <div class="modal-hdr"><div><div class="modal-title">✨ AI Caption Generator</div><div class="modal-subtitle">Create platform-optimized captions with AI</div></div><div class="modal-close" onclick="closeModal('captionModal')"><i class="fa-solid fa-xmark"></i></div></div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="flabel">Platforms</label>
+        <div class="plat-pills" id="platPills">
+          <div class="ppill sig" data-p="Instagram" onclick="togglePill(this)"><i class="fa-brands fa-instagram"></i> Instagram</div>
+          <div class="ppill" data-p="YouTube" onclick="togglePill(this)"><i class="fa-brands fa-youtube"></i> YouTube</div>
+          <div class="ppill" data-p="Twitter" onclick="togglePill(this)"><i class="fa-brands fa-x-twitter"></i> Twitter</div>
+          <div class="ppill" data-p="Facebook" onclick="togglePill(this)"><i class="fa-brands fa-facebook-f"></i> Facebook</div>
+        </div>
+      </div>
+      <div class="ai-gen-box">
+        <div class="ai-gen-top"><div class="ai-gen-label">✨ Generate with AI</div><button class="gen-btn" id="genBtn" onclick="generateCaption()"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate</button></div>
+        <input class="topic-input" id="topicInput" type="text" placeholder="Describe your post… e.g. 'morning gym workout motivation'"/>
+        <div class="form-row" style="margin-top:10px;">
+          <select class="fselect" id="toneSelect" style="font-size:12px;padding:7px 10px;">
+            <option value="engaging">Engaging & Fun</option><option value="professional">Professional</option><option value="motivational">Motivational</option><option value="humorous">Humorous</option><option value="educational">Educational</option>
+          </select>
+          <select class="fselect" id="lengthSelect" style="font-size:12px;padding:7px 10px;">
+            <option value="short">Short (1-2 lines)</option><option value="medium" selected>Medium (3-4 lines)</option><option value="long">Long (with hashtags)</option>
+          </select>
+        </div>
+        <div class="ai-loading" id="capLoading"><div class="dots"><span></span><span></span><span></span></div><span>AI is crafting your caption…</span></div>
+        <div class="ai-result" id="capResult">
+          <div class="result-text" id="capText"></div>
+          <div class="result-actions">
+            <button class="res-btn" onclick="generateCaption()"><i class="fa-solid fa-arrows-rotate"></i> Regenerate</button>
+            <button class="res-btn primary" onclick="useCaption()"><i class="fa-solid fa-check"></i> Use This</button>
+          </div>
+        </div>
+      </div>
+      <div class="form-group"><label class="flabel">Post Caption</label><textarea class="ftextarea" id="postCaption" placeholder="Caption will appear here after generation, or type manually…"></textarea></div>
+      <div class="form-row">
+        <div class="form-group" style="margin-bottom:0;"><label class="flabel">Post Type</label><select class="fselect"><option>Photo</option><option>Video / Reel</option><option>Story</option><option>Thread</option><option>Short</option></select></div>
+        <div class="form-group" style="margin-bottom:0;"><label class="flabel">Schedule Time</label><input class="finput" type="datetime-local"/></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button class="res-btn" style="flex:1;padding:11px;font-size:14px;" onclick="closeModal('captionModal')">Save Draft</button>
+        <button class="send-btn" style="margin:0;flex:1;" onclick="submitCaptionPost()"><i class="fa-solid fa-square-plus"></i> Post</button>
+        <button class="send-btn" style="margin:0;flex:1;" onclick="schedulePost()"><i class="fa-solid fa-calendar-check"></i> Schedule Post</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ -->
+<!-- MODAL 4: AI Analytics       -->
+<!-- ════════════════════════════ -->
+<div class="modal-overlay" id="insightsModal">
+  <div class="modal">
+    <div class="modal-hdr"><div><div class="modal-title">🧠 AI Analytics Insights</div><div class="modal-subtitle">Deep-dive analysis powered by Claude AI</div></div><div class="modal-close" onclick="closeModal('insightsModal')"><i class="fa-solid fa-xmark"></i></div></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="flabel">What do you want to analyze?</label><input class="finput" id="insightQ" type="text" placeholder="e.g. Why is my engagement dropping?" value="Why is my Instagram engagement higher than YouTube?"/></div>
+      <div class="form-group"><label class="flabel">Time Period</label><select class="fselect" id="insightPeriod"><option>Last 7 days</option><option selected>Last 14 days</option><option>Last 30 days</option><option>Last 90 days</option></select></div>
+      <button class="send-btn" style="margin-bottom:16px;" onclick="generateInsights()"><i class="fa-solid fa-brain"></i> Analyze with AI</button>
+      <div class="ai-loading" id="insLoading"><div class="dots"><span></span><span></span><span></span></div><span>AI is analyzing your data…</span></div>
+      <div class="ai-result" id="insResult"><div class="result-text" id="insText" style="font-size:13.5px;"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════ -->
+<!-- MODAL 5: AI Reply           -->
+<!-- ════════════════════════════ -->
+<div class="modal-overlay" id="replyModal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal-hdr"><div><div class="modal-title">💬 AI Reply Suggestions</div><div class="modal-subtitle">Smart replies crafted by Claude AI</div></div><div class="modal-close" onclick="closeModal('replyModal')"><i class="fa-solid fa-xmark"></i></div></div>
+    <div class="modal-body">
+      <div class="orig-comment" id="origComment"><strong id="commenterName"></strong><span id="commentText"></span></div>
+      <div class="ai-loading" id="replyLoading"><div class="dots"><span></span><span></span><span></span></div><span>AI is generating replies…</span></div>
+      <div class="reply-list" id="replyList"></div>
+      <div id="replyArea" style="display:none;">
+        <label class="flabel" style="margin-top:12px;">Your Reply</label>
+        <textarea class="ftextarea" id="replyText" style="min-height:80px;"></textarea>
+        <button class="send-btn" onclick="sendReply()"><i class="fa-solid fa-paper-plane"></i> Send Reply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+
+<!-- ═══════════════════════════════ -->
+<!-- ALL ACTIVITY MODAL -->
+<!-- ═══════════════════════════════ -->
+<div class="modal-overlay" id="activityModal">
+  <div class="modal" style="max-width:780px;">
+    <div class="modal-hdr">
+      <div><div class="modal-title">⚡ All Activity</div><div class="modal-subtitle">Complete activity log across all your platforms</div></div>
+      <div class="modal-close" onclick="closeModal('activityModal')"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="modal-body">
+
+      <!-- Stats Row -->
+      <div class="activity-modal-stats">
+        <div class="activity-modal-stat">
+          <div class="activity-modal-stat-val">128</div>
+          <div class="activity-modal-stat-lbl">Total Today</div>
+        </div>
+        <div class="activity-modal-stat">
+          <div class="activity-modal-stat-val">47</div>
+          <div class="activity-modal-stat-lbl">New Follows</div>
+        </div>
+        <div class="activity-modal-stat">
+          <div class="activity-modal-stat-val">63</div>
+          <div class="activity-modal-stat-lbl">Comments</div>
+        </div>
+        <div class="activity-modal-stat">
+          <div class="activity-modal-stat-val">18</div>
+          <div class="activity-modal-stat-lbl">Mentions</div>
+        </div>
+      </div>
+
+      <!-- Search Row -->
+      <div class="activity-search-row">
+        <input type="text" id="activitySearch" placeholder="Search activity by name, keyword…" oninput="filterActivityList(this.value)"/>
+        <button class="res-btn primary" onclick="exportActivityLog()"><i class="fa-solid fa-download"></i> Export</button>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="activity-filters">
+        <button class="activity-filter-btn active" data-filter="all" onclick="setActivityFilter(this,'all')"><i class="fa-solid fa-border-all"></i> All</button>
+        <button class="activity-filter-btn follow" data-filter="follow" onclick="setActivityFilter(this,'follow')"><i class="fa-solid fa-user-plus"></i> Follows</button>
+        <button class="activity-filter-btn comment" data-filter="comment" onclick="setActivityFilter(this,'comment')"><i class="fa-regular fa-comment"></i> Comments</button>
+        <button class="activity-filter-btn mention" data-filter="mention" onclick="setActivityFilter(this,'mention')"><i class="fa-solid fa-at"></i> Mentions</button>
+        <button class="activity-filter-btn like" data-filter="like" onclick="setActivityFilter(this,'like')"><i class="fa-regular fa-heart"></i> Likes</button>
+        <button class="activity-filter-btn share" data-filter="share" onclick="setActivityFilter(this,'share')"><i class="fa-solid fa-retweet"></i> Shares</button>
+      </div>
+
+      <!-- Full Activity List -->
+      <div class="activity-full-list" id="activityFullList">
+
+        <!-- TODAY -->
+        <div class="act-divider-date">Today · April 15, 2025</div>
+
+        <div class="act-full-item" data-type="follow" data-text="alex sharma followed instagram">
+          <div class="act-icon follow"><i class="fa-solid fa-user-plus"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text"><strong>Alex Sharma</strong> followed you on Instagram</div>
+            <div class="act-full-meta">
+              <span class="act-time">2 min ago</span>
+              <span class="act-platform-tag ig"><i class="fa-brands fa-instagram"></i> Instagram</span>
+              <span class="act-type-tag">New Follow</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn" onclick="showToast('Following back Alex Sharma!')"><i class="fa-solid fa-user-plus"></i> Follow back</button>
+          </div>
+        </div>
+
+        <div class="act-full-item" data-type="comment" data-text="sam commented nice content youtube">
+          <div class="act-icon comment"><i class="fa-brands fa-youtube"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text"><strong>Sam</strong> commented on your video: <em>"Nice content 😊"</em></div>
+            <div class="act-full-meta">
+              <span class="act-time">14 min ago</span>
+              <span class="act-platform-tag yt"><i class="fa-brands fa-youtube"></i> YouTube</span>
+              <span class="act-type-tag">Comment</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn ai" onclick="openReplyModal('Sam','Nice content 😊','YouTube');closeModal('activityModal')">✨ AI Reply</button>
+            <button class="act-action-btn" onclick="showToast('Comment liked!')"><i class="fa-regular fa-heart"></i></button>
+          </div>
+        </div>
+
+        <div class="act-full-item" data-type="mention" data-text="techtrends mentioned twitter tweet viral">
+          <div class="act-icon mention"><i class="fa-brands fa-x-twitter"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text">Mentioned by <strong>@TechTrends</strong>: <em>"Great insights from @JaySharma on going viral!"</em></div>
+            <div class="act-full-meta">
+              <span class="act-time">1 hr ago</span>
+              <span class="act-platform-tag tw"><i class="fa-brands fa-x-twitter"></i> Twitter / X</span>
+              <span class="act-type-tag">Mention</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn ai" onclick="openReplyModal('@TechTrends','Great insights from @JaySharma on going viral!','Twitter');closeModal('activityModal')">✨ AI Reply</button>
+            <button class="act-action-btn" onclick="showToast('Retweeted!')"><i class="fa-solid fa-retweet"></i></button>
+          </div>
+        </div>
+
+        <div class="act-full-item" data-type="like" data-text="priya liked reel instagram 320">
+          <div class="act-icon like"><i class="fa-regular fa-heart"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text"><strong>Priya K.</strong> and <strong>124 others</strong> liked your Reel — 320 likes total</div>
+            <div class="act-full-meta">
+              <span class="act-time">2 hr ago</span>
+              <span class="act-platform-tag ig"><i class="fa-brands fa-instagram"></i> Instagram</span>
+              <span class="act-type-tag">Like</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn" onclick="openAnalyticsModal();closeModal('activityModal')"><i class="fa-solid fa-chart-line"></i> View stats</button>
+          </div>
+        </div>
+
+        <div class="act-full-item" data-type="share" data-text="thread retweets 847 twitter">
+          <div class="act-icon share"><i class="fa-solid fa-retweet"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text">Your thread got <strong>847 retweets</strong> in the last hour 🚀</div>
+            <div class="act-full-meta">
+              <span class="act-time">3 hr ago</span>
+              <span class="act-platform-tag tw"><i class="fa-brands fa-x-twitter"></i> Twitter / X</span>
+              <span class="act-type-tag">Retweet</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn" onclick="openAnalyticsModal();closeModal('activityModal')"><i class="fa-solid fa-chart-line"></i> View stats</button>
+          </div>
+        </div>
+
+        <div class="act-full-item" data-type="follow" data-text="musicproducermike subscribed youtube">
+          <div class="act-icon follow"><i class="fa-solid fa-user-plus"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text"><strong>MusicProducerMike</strong> subscribed to your YouTube channel</div>
+            <div class="act-full-meta">
+              <span class="act-time">5 hr ago</span>
+              <span class="act-platform-tag yt"><i class="fa-brands fa-youtube"></i> YouTube</span>
+              <span class="act-type-tag">New Subscriber</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn" onclick="showToast('Pinning comment for MusicProducerMike!')"><i class="fa-solid fa-thumbtack"></i> Pin</button>
+          </div>
+        </div>
+
+        <div class="act-full-item" data-type="comment" data-text="photography lover colors camera instagram editing">
+          <div class="act-icon comment"><i class="fa-brands fa-instagram"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text"><strong>@photography_lover</strong> commented: <em>"The colors in this shot are incredible! What camera do you use?"</em></div>
+            <div class="act-full-meta">
+              <span class="act-time">5 hr ago</span>
+              <span class="act-platform-tag ig"><i class="fa-brands fa-instagram"></i> Instagram</span>
+              <span class="act-type-tag">Comment</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn ai" onclick="openReplyModal('@photography_lover','The colors in this shot are incredible! What camera do you use?','Instagram');closeModal('activityModal')">✨ AI Reply</button>
+          </div>
+        </div>
+
+        <div class="act-full-item" data-type="like" data-text="sarah chen facebook photo liked">
+          <div class="act-icon like"><i class="fa-solid fa-thumbs-up"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text"><strong>Sarah Chen</strong> liked your Facebook photo post</div>
+            <div class="act-full-meta">
+              <span class="act-time">6 hr ago</span>
+              <span class="act-platform-tag fb"><i class="fa-brands fa-facebook-f"></i> Facebook</span>
+              <span class="act-type-tag">Like</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn" onclick="showToast('Message opened!')"><i class="fa-regular fa-envelope"></i> Message</button>
+          </div>
+        </div>
+
+        <!-- YESTERDAY -->
+        <div class="act-divider-date">Yesterday · April 14, 2025</div>
+
+        <div class="act-full-item" data-type="mention" data-text="contentwave mention instagram collab brand">
+          <div class="act-icon mention"><i class="fa-brands fa-instagram"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text"><strong>@contentwave</strong> mentioned you in a Story: <em>"Inspired by @jaysharma's workflow!"</em></div>
+            <div class="act-full-meta">
+              <span class="act-time">Yesterday, 9:41 PM</span>
+              <span class="act-platform-tag ig"><i class="fa-brands fa-instagram"></i> Instagram</span>
+              <span class="act-type-tag">Story Mention</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn ai" onclick="openReplyModal('@contentwave','Inspired by @jaysharma workflow!','Instagram');closeModal('activityModal')">✨ AI Reply</button>
+          </div>
+        </div>
+
+        <div class="act-full-item" data-type="follow" data-text="new followers instagram 324 yesterday">
+          <div class="act-icon follow"><i class="fa-solid fa-users"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text"><strong>324 new followers</strong> on Instagram in the last 24 hours</div>
+            <div class="act-full-meta">
+              <span class="act-time">Yesterday, 6:00 PM</span>
+              <span class="act-platform-tag ig"><i class="fa-brands fa-instagram"></i> Instagram</span>
+              <span class="act-type-tag">Follower Milestone</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn" onclick="openAnalyticsModal();closeModal('activityModal')"><i class="fa-solid fa-chart-line"></i> Analytics</button>
+          </div>
+        </div>
+
+        <div class="act-full-item" data-type="comment" data-text="techguru tutorial helpful youtube workflow editing">
+          <div class="act-icon comment"><i class="fa-brands fa-youtube"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text"><strong>TechGuru</strong> commented on your tutorial: <em>"This was incredibly helpful! Struggling with editing workflow for months."</em></div>
+            <div class="act-full-meta">
+              <span class="act-time">Yesterday, 3:15 PM</span>
+              <span class="act-platform-tag yt"><i class="fa-brands fa-youtube"></i> YouTube</span>
+              <span class="act-type-tag">Comment</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn ai" onclick="openReplyModal('TechGuru','This tutorial was incredibly helpful!','YouTube');closeModal('activityModal')">✨ AI Reply</button>
+            <button class="act-action-btn" onclick="showToast('Comment liked!')"><i class="fa-regular fa-heart"></i></button>
+          </div>
+        </div>
+
+        <div class="act-full-item" data-type="share" data-text="reel shared 203 facebook instagram">
+          <div class="act-icon share"><i class="fa-solid fa-share-nodes"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text">Your beach Reel was shared <strong>203 times</strong> across platforms</div>
+            <div class="act-full-meta">
+              <span class="act-time">Yesterday, 11:00 AM</span>
+              <span class="act-platform-tag ig"><i class="fa-brands fa-instagram"></i> Instagram</span>
+              <span class="act-type-tag">Share Spike</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn" onclick="openAnalyticsModal();closeModal('activityModal')"><i class="fa-solid fa-chart-line"></i> View stats</button>
+          </div>
+        </div>
+
+        <div class="act-full-item" data-type="like" data-text="thread likes 1200 twitter going viral">
+          <div class="act-icon like"><i class="fa-regular fa-heart"></i></div>
+          <div class="act-body" style="flex:1;">
+            <div class="act-text">Your Twitter thread crossed <strong>1,200 likes</strong> — trending in Creator niche 🔥</div>
+            <div class="act-full-meta">
+              <span class="act-time">Yesterday, 8:30 AM</span>
+              <span class="act-platform-tag tw"><i class="fa-brands fa-x-twitter"></i> Twitter / X</span>
+              <span class="act-type-tag">Milestone</span>
+            </div>
+          </div>
+          <div class="act-full-item-actions">
+            <button class="act-action-btn" onclick="openAnalyticsModal();closeModal('activityModal')"><i class="fa-solid fa-chart-line"></i> Analytics</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Actions -->
+      <div style="display:flex;gap:10px;margin-top:20px;">
+        <button class="res-btn" style="flex:1;padding:11px;" onclick="loadMoreActivity()"><i class="fa-solid fa-rotate-down"></i> Load More</button>
+        <button class="send-btn" style="margin:0;flex:1;" onclick="exportActivityLog()"><i class="fa-solid fa-download"></i> Export Log</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- PANEL BACKDROP -->
+<!-- ═══════════════════════════════ -->
+<div class="panel-backdrop" id="panelBackdrop" onclick="closeAllPanels()"></div>
+
+<!-- ═══════════════════════════════ -->
+<!-- SEARCH PANEL -->
+<!-- ═══════════════════════════════ -->
+<div class="hdr-panel search-panel" id="searchPanel">
+  <div class="hdr-panel-hdr">
+    <div class="hdr-panel-title"><i class="fa-solid fa-magnifying-glass" style="color:var(--primary);margin-right:8px;"></i>Search</div>
+    <div class="hdr-panel-close" onclick="closeAllPanels()"><i class="fa-solid fa-xmark"></i></div>
+  </div>
+  <div class="search-panel-input">
+    <i class="fa-solid fa-magnifying-glass" style="color:var(--text-light);"></i>
+    <input type="text" id="searchPanelInput" placeholder="Search posts, analytics, platforms…" oninput="liveSearch(this.value)" autofocus/>
+    <i class="fa-solid fa-xmark" style="color:var(--text-light);cursor:pointer;font-size:12px;" onclick="clearSearch()"></i>
+  </div>
+  <div class="search-categories">
+    <div class="search-cat active" onclick="filterSearch(this,'all')">All</div>
+    <div class="search-cat" onclick="filterSearch(this,'posts')"><i class="fa-solid fa-pen-to-square"></i> Posts</div>
+    <div class="search-cat" onclick="filterSearch(this,'analytics')"><i class="fa-solid fa-chart-line"></i> Analytics</div>
+    <div class="search-cat" onclick="filterSearch(this,'inbox')"><i class="fa-solid fa-inbox"></i> Inbox</div>
+    <div class="search-cat" onclick="filterSearch(this,'settings')"><i class="fa-solid fa-gear"></i> Settings</div>
+  </div>
+  <div class="search-results" id="searchResults">
+    <!-- Default state: Recent Searches -->
+    <div id="searchDefault">
+      <div class="search-recent">
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-light);">Recent Searches</span>
+        <span style="font-size:11px;font-weight:600;color:var(--primary);cursor:pointer;" onclick="clearRecentSearches()">Clear all</span>
+      </div>
+      <div class="search-result-item" onclick="runSearch('Instagram Reel performance')">
+        <div class="search-result-icon" style="background:#fff0f7;color:#e1306c;"><i class="fa-brands fa-instagram"></i></div>
+        <div><div class="search-result-label">Instagram Reel performance</div><div class="search-result-sub">Analytics · 2 days ago</div></div>
+      </div>
+      <div class="search-result-item" onclick="runSearch('YouTube engagement')">
+        <div class="search-result-icon" style="background:#fff2f2;color:#ff0000;"><i class="fa-brands fa-youtube"></i></div>
+        <div><div class="search-result-label">YouTube engagement</div><div class="search-result-sub">Analytics · 4 days ago</div></div>
+      </div>
+      <div class="search-result-item" onclick="runSearch('Beach vlog post')">
+        <div class="search-result-icon" style="background:var(--primary-light);color:var(--primary);"><i class="fa-solid fa-pen-to-square"></i></div>
+        <div><div class="search-result-label">Beach vlog post</div><div class="search-result-sub">Posts · 1 week ago</div></div>
+      </div>
+    </div>
+    <!-- Live search results (hidden by default) -->
+    <div id="searchLiveResults" style="display:none;">
+      <div class="search-result-group">
+        <div class="search-result-group-label">Posts</div>
+        <div class="search-result-item" onclick="closeAllPanels();showToast('Opening post...')">
+          <div class="search-result-icon" style="background:#fff0f7;color:#e1306c;"><i class="fa-brands fa-instagram"></i></div>
+          <div><div class="search-result-label">🔥 Sunday morning vlog — beach edition</div><div class="search-result-sub">Instagram Reel · Apr 15 · 320 likes</div></div>
+        </div>
+        <div class="search-result-item" onclick="closeAllPanels();showToast('Opening post...')">
+          <div class="search-result-icon" style="background:#fff2f2;color:#ff0000;"><i class="fa-brands fa-youtube"></i></div>
+          <div><div class="search-result-label">New tutorial: editing workflow tips</div><div class="search-result-sub">YouTube Short · Apr 14 · 280 likes</div></div>
+        </div>
+      </div>
+      <div class="search-result-group">
+        <div class="search-result-group-label">Analytics</div>
+        <div class="search-result-item" onclick="closeAllPanels();openAnalyticsModal()">
+          <div class="search-result-icon" style="background:var(--primary-light);color:var(--primary);"><i class="fa-solid fa-chart-line"></i></div>
+          <div><div class="search-result-label">Platform Performance Report</div><div class="search-result-sub">Analytics · Apr 1 – Apr 15</div></div>
+        </div>
+      </div>
+      <div class="search-result-group">
+        <div class="search-result-group-label">Pages</div>
+        <div class="search-result-item" onclick="closeAllPanels();openInboxModal()">
+          <div class="search-result-icon" style="background:#f0fdf4;color:#22c55e;"><i class="fa-solid fa-inbox"></i></div>
+          <div><div class="search-result-label">Inbox</div><div class="search-result-sub">5 unread messages</div></div>
+        </div>
+        <div class="search-result-item" onclick="closeAllPanels();openSettingsModal()">
+          <div class="search-result-icon" style="background:var(--bg);color:var(--text-mid);"><i class="fa-solid fa-gear"></i></div>
+          <div><div class="search-result-label">Settings</div><div class="search-result-sub">Preferences, notifications, appearance</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- NOTIFICATION PANEL -->
+<!-- ═══════════════════════════════ -->
+<div class="hdr-panel notif-panel" id="notifPanel">
+  <div class="hdr-panel-hdr">
+    <div class="hdr-panel-title"><i class="fa-regular fa-bell" style="color:var(--primary);margin-right:8px;"></i>Notifications <span style="font-size:11px;background:var(--accent-red);color:#fff;border-radius:20px;padding:1px 7px;margin-left:4px;" id="notifBadge">5 new</span></div>
+    <div style="display:flex;gap:6px;align-items:center;">
+      <span style="font-size:11px;font-weight:600;color:var(--primary);cursor:pointer;" onclick="markAllNotifsRead()">Mark all read</span>
+      <div class="hdr-panel-close" onclick="closeAllPanels()"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+  </div>
+  <div class="notif-tabs">
+    <div class="notif-tab active" onclick="switchNotifTab(this,'all')">All</div>
+    <div class="notif-tab" onclick="switchNotifTab(this,'mentions')">Mentions</div>
+    <div class="notif-tab" onclick="switchNotifTab(this,'likes')">Likes</div>
+    <div class="notif-tab" onclick="switchNotifTab(this,'follows')">Follows</div>
+  </div>
+  <div class="notif-list" id="notifList">
+    <div class="notif-item unread" data-type="follow" onclick="readNotif(this)">
+      <div class="notif-item-icon act-icon follow"><i class="fa-solid fa-user-plus"></i></div>
+      <div class="notif-item-body">
+        <div class="notif-item-text"><strong>Alex Sharma</strong> followed you on Instagram</div>
+        <div class="notif-item-time">2 min ago · Instagram</div>
+      </div>
+    </div>
+    <div class="notif-item unread" data-type="comment" onclick="readNotif(this)">
+      <div class="notif-item-icon act-icon comment"><i class="fa-brands fa-youtube"></i></div>
+      <div class="notif-item-body">
+        <div class="notif-item-text"><strong>Sam</strong> commented on your video: "Nice content 😊"</div>
+        <div class="notif-item-time">14 min ago · YouTube</div>
+      </div>
+    </div>
+    <div class="notif-item unread" data-type="mentions" onclick="readNotif(this)">
+      <div class="notif-item-icon act-icon mention"><i class="fa-brands fa-x-twitter"></i></div>
+      <div class="notif-item-body">
+        <div class="notif-item-text">You were mentioned by <strong>@TechTrends</strong> in a tweet</div>
+        <div class="notif-item-time">1 hr ago · Twitter / X</div>
+      </div>
+    </div>
+    <div class="notif-item unread" data-type="likes" onclick="readNotif(this)">
+      <div class="notif-item-icon act-icon like"><i class="fa-regular fa-heart"></i></div>
+      <div class="notif-item-body">
+        <div class="notif-item-text"><strong>Priya K.</strong> and <strong>124 others</strong> liked your Instagram Reel</div>
+        <div class="notif-item-time">2 hr ago · Instagram</div>
+      </div>
+    </div>
+    <div class="notif-item unread" data-type="follow" onclick="readNotif(this)">
+      <div class="notif-item-icon act-icon share"><i class="fa-solid fa-retweet"></i></div>
+      <div class="notif-item-body">
+        <div class="notif-item-text">Your thread got <strong>847 retweets</strong> in the last hour 🚀</div>
+        <div class="notif-item-time">3 hr ago · Twitter / X</div>
+      </div>
+    </div>
+    <div class="notif-item" data-type="likes" onclick="readNotif(this)">
+      <div class="notif-item-icon act-icon follow"><i class="fa-solid fa-user-plus"></i></div>
+      <div class="notif-item-body">
+        <div class="notif-item-text"><strong>MusicProducerMike</strong> subscribed to your YouTube channel</div>
+        <div class="notif-item-time">5 hr ago · YouTube</div>
+      </div>
+    </div>
+    <div class="notif-item" data-type="comment" onclick="readNotif(this)">
+      <div class="notif-item-icon act-icon comment"><i class="fa-brands fa-instagram"></i></div>
+      <div class="notif-item-body">
+        <div class="notif-item-text"><strong>@photography_lover</strong> commented: "The colors in this shot are incredible!"</div>
+        <div class="notif-item-time">5 hr ago · Instagram</div>
+      </div>
+    </div>
+    <div class="notif-item" data-type="likes" onclick="readNotif(this)">
+      <div class="notif-item-icon act-icon like"><i class="fa-solid fa-thumbs-up"></i></div>
+      <div class="notif-item-body">
+        <div class="notif-item-text"><strong>Sarah Chen</strong> liked your Facebook photo post</div>
+        <div class="notif-item-time">1 day ago · Facebook</div>
+      </div>
+    </div>
+  </div>
+  <div class="notif-footer">
+    <a onclick="closeAllPanels();openInboxModal()">View all in Inbox →</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- PROFILE DROPDOWN (Header Avatar) -->
+<!-- ═══════════════════════════════ -->
+<div class="hdr-panel profile-dropdown" id="profileDropdown">
+  <div class="profile-drop-top">
+    <div class="profile-drop-avatar">JS</div>
+    <div>
+      <div class="profile-drop-name">Jay Sharma</div>
+      <div class="profile-drop-role">@jaysharma</div> 
+    </div>
+  </div>
+  <div class="profile-drop-menu">
+    <div class="profile-drop-item" onclick="closeAllPanels();openProfileModal()">
+      <div class="pdi-icon"><i class="fa-regular fa-user"></i></div> View Profile
+    </div>
+    <div class="profile-drop-item" onclick="closeAllPanels();openAnalyticsModal()">
+      <div class="pdi-icon"><i class="fa-solid fa-chart-line"></i></div> Analytics
+    </div>
+    <div class="profile-drop-item" onclick="closeAllPanels();openPostModal()">
+      <div class="pdi-icon"><i class="fa-solid fa-pen-to-square"></i></div> Create Post
+    </div>
+    <div class="profile-drop-item" onclick="closeAllPanels();openScheduleModal()">
+      <div class="pdi-icon"><i class="fa-regular fa-calendar"></i></div> Content Calendar
+    </div>
+    <div class="profile-drop-divider"></div>
+    <div class="profile-drop-item" onclick="closeAllPanels();openSettingsModal()">
+      <div class="pdi-icon"><i class="fa-solid fa-gear"></i></div> Settings
+    </div>
+    <div class="profile-drop-item" onclick="closeAllPanels();openConnectionsModal()">
+      <div class="pdi-icon"><i class="fa-solid fa-link"></i></div> Connections
+    </div>
+    <div class="profile-drop-divider"></div>
+    <div class="profile-drop-item danger" onclick="closeAllPanels();logoutUser()">
+      <div class="pdi-icon"><i class="fa-solid fa-sign-out-alt"></i></div> Logout
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<div class="modal-overlay" id="scheduleModal">
+  <div class="modal" style="max-width:960px;">
+    <div class="modal-hdr">
+      <div><div class="modal-title">📅 Content Calendar</div><div class="modal-subtitle">Schedule and manage your upcoming posts</div></div>
+      <div class="modal-close" onclick="closeModal('scheduleModal')"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <div class="modal-body">
+
+      <!-- Schedule Stats -->
+      <div class="sched-stat-row">
+        <div class="sched-stat">
+          <div class="sched-stat-val">12</div>
+          <div class="sched-stat-lbl">Scheduled</div>
+        </div>
+        <div class="sched-stat">
+          <div class="sched-stat-val">4</div>
+          <div class="sched-stat-lbl">Drafts</div>
+        </div>
+        <div class="sched-stat">
+          <div class="sched-stat-val">38</div>
+          <div class="sched-stat-lbl">Published</div>
+        </div>
+      </div>
+
+      <!-- Calendar Header -->
+      <div class="cal-header">
+        <div class="cal-nav">
+          <div class="cal-nav-btn" onclick="changeMonth(-1)"><i class="fa-solid fa-chevron-left"></i></div>
+          <div class="cal-month-title" id="calMonthTitle">April 2025</div>
+          <div class="cal-nav-btn" onclick="changeMonth(1)"><i class="fa-solid fa-chevron-right"></i></div>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="res-btn" onclick="openPostModal()"><i class="fa-solid fa-plus"></i> New Post</button>
+          <button class="res-btn primary" id="calViewToggle" onclick="toggleCalView()"><i class="fa-solid fa-list"></i> List View</button>
+        </div>
+      </div>
+
+      <!-- Calendar Grid -->
+      <div id="calendarView">
+        <div class="cal-grid" id="calDayLabels">
+          <div class="cal-day-label">Sun</div>
+          <div class="cal-day-label">Mon</div>
+          <div class="cal-day-label">Tue</div>
+          <div class="cal-day-label">Wed</div>
+          <div class="cal-day-label">Thu</div>
+          <div class="cal-day-label">Fri</div>
+          <div class="cal-day-label">Sat</div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+
+      <!-- List View (hidden by default) -->
+      <div id="listView" style="display:none;">
+        <div class="sched-list-header">
+          <div class="card-title">Upcoming Scheduled Posts</div>
+          <div style="font-size:12px;color:var(--text-light);">April 2025</div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-item-time">Apr 16 · 10:00 AM</div>
+          <div class="sched-item-body">
+            <div class="sched-item-title">5 things I wish I knew before going viral — thread</div>
+            <div class="sched-item-meta">
+              <span>Twitter Thread</span>·<span class="best-badge">✨ Best Time</span>
+              <div class="sched-item-plats"><span class="plat-icon tw" style="width:18px;height:18px;font-size:10px;border-radius:5px;"><i class="fa-brands fa-x-twitter"></i></span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            <button class="res-btn" onclick="editScheduledPost()"><i class="fa-regular fa-pen-to-square"></i></button>
+            <button class="res-btn" onclick="deleteScheduledPost(this)"><i class="fa-regular fa-trash-can"></i></button>
+          </div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-item-time">Apr 17 · 6:00 PM</div>
+          <div class="sched-item-body">
+            <div class="sched-item-title">Poll: which thumbnail do you prefer? Story</div>
+            <div class="sched-item-meta">
+              <span>Instagram Story</span>
+              <div class="sched-item-plats"><span class="plat-icon ig" style="width:18px;height:18px;font-size:10px;border-radius:5px;"><i class="fa-brands fa-instagram"></i></span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            <button class="res-btn" onclick="editScheduledPost()"><i class="fa-regular fa-pen-to-square"></i></button>
+            <button class="res-btn" onclick="deleteScheduledPost(this)"><i class="fa-regular fa-trash-can"></i></button>
+          </div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-item-time">Apr 19 · 9:00 AM</div>
+          <div class="sched-item-body">
+            <div class="sched-item-title">Morning productivity tips — carousel post</div>
+            <div class="sched-item-meta">
+              <span>Instagram Carousel</span>
+              <div class="sched-item-plats">
+                <span class="plat-icon ig" style="width:18px;height:18px;font-size:10px;border-radius:5px;"><i class="fa-brands fa-instagram"></i></span>
+                <span class="plat-icon fb" style="width:18px;height:18px;font-size:10px;border-radius:5px;"><i class="fa-brands fa-facebook-f"></i></span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            <button class="res-btn" onclick="editScheduledPost()"><i class="fa-regular fa-pen-to-square"></i></button>
+            <button class="res-btn" onclick="deleteScheduledPost(this)"><i class="fa-regular fa-trash-can"></i></button>
+          </div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-item-time">Apr 21 · 3:00 PM</div>
+          <div class="sched-item-body">
+            <div class="sched-item-title">Behind the scenes editing workflow — YouTube Short</div>
+            <div class="sched-item-meta">
+              <span>YouTube Short</span>·<span class="best-badge">✨ Best Time</span>
+              <div class="sched-item-plats"><span class="plat-icon yt" style="width:18px;height:18px;font-size:10px;border-radius:5px;"><i class="fa-brands fa-youtube"></i></span></div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            <button class="res-btn" onclick="editScheduledPost()"><i class="fa-regular fa-pen-to-square"></i></button>
+            <button class="res-btn" onclick="deleteScheduledPost(this)"><i class="fa-regular fa-trash-can"></i></button>
+          </div>
+        </div>
+        <div class="sched-item">
+          <div class="sched-item-time">Apr 24 · 11:00 AM</div>
+          <div class="sched-item-body">
+            <div class="sched-item-title">Q&A session recap + highlights reel</div>
+            <div class="sched-item-meta">
+              <span>Instagram Reel</span>
+              <div class="sched-item-plats">
+                <span class="plat-icon ig" style="width:18px;height:18px;font-size:10px;border-radius:5px;"><i class="fa-brands fa-instagram"></i></span>
+                <span class="plat-icon yt" style="width:18px;height:18px;font-size:10px;border-radius:5px;"><i class="fa-brands fa-youtube"></i></span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            <button class="res-btn" onclick="editScheduledPost()"><i class="fa-regular fa-pen-to-square"></i></button>
+            <button class="res-btn" onclick="deleteScheduledPost(this)"><i class="fa-regular fa-trash-can"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Best Time Suggestion -->
+      <div style="margin-top:20px;padding:14px 16px;background:linear-gradient(135deg,#ede9ff,#fce7f3);border-radius:12px;border:1px solid #ddd6fe;display:flex;align-items:center;gap:12px;">
+        <div style="font-size:22px;">🤖</div>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:3px;">AI Posting Recommendations</div>
+          <div style="font-size:12px;color:var(--text-mid);">Best times this week: <strong>Tue 7PM</strong>, <strong>Thu 12PM</strong>, <strong>Sat 10AM</strong> for maximum reach based on your audience data.</div>
+        </div>
+        <button class="gen-btn" onclick="applyBestTimes()"><i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Schedule</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ -->
+<!-- PROFILE MODAL -->
+<!-- ═══════════════════════════════ -->
+<div class="modal-overlay" id="profileModal">
+  <div class="modal" style="max-width:680px;padding:0;overflow:hidden;">
+    <div style="position:relative;">
+      <!-- Banner -->
+      <div class="profile-banner"></div>
+      <!-- Close Button -->
+      <div class="modal-close" style="position:absolute;top:12px;right:12px;z-index:10;background:rgba(0,0,0,.3);border-color:transparent;color:#fff;" onclick="closeModal('profileModal')"><i class="fa-solid fa-xmark"></i></div>
+      <!-- Avatar -->
+      <div class="profile-avatar-wrap">
+        <div class="profile-avatar-big">JS</div>
+      </div>
+    </div>
+
+    <!-- Profile Info -->
+    <div class="profile-info">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+        <div>
+          <div class="profile-name">Jay Sharma</div>
+          <div class="profile-handle">@jaysharma · Creator</div>
+          <div class="profile-bio">📸 Photographer &amp; Content Creator | Sharing tips on growing your brand online. 3M+ impressions/month 🚀</div>
+        </div>
+        <button class="profile-edit-btn" onclick="editProfile()"><i class="fa-regular fa-pen-to-square"></i> Edit Profile</button>
+      </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="profile-stats-row">
+      <div class="profile-stat">
+        <div class="profile-stat-val">261K</div>
+        <div class="profile-stat-lbl">Total Followers</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-val">9.7%</div>
+        <div class="profile-stat-lbl">Avg. Engagement</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-val">38</div>
+        <div class="profile-stat-lbl">Posts This Month</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-val">3.2M</div>
+        <div class="profile-stat-lbl">Monthly Impressions</div>
+      </div>
+    </div>
+
+    <!-- Connected Platforms -->
+    <div class="profile-section">
+      <div class="profile-section-title"><i class="fa-solid fa-link" style="color:var(--primary);"></i> Connected Platforms</div>
+      <div class="profile-platform-row">
+        <div class="profile-plat-left"><div class="plat-icon ig"><i class="fa-brands fa-instagram"></i></div> Instagram</div>
+        <div style="font-size:12px;color:var(--text-light);">@jaysharma</div>
+        <div class="profile-plat-num">124.3K</div>
+        <span class="sbadge pub"><i class="fa-solid fa-circle-check"></i> Connected</span>
+      </div>
+      <div class="profile-platform-row">
+        <div class="profile-plat-left"><div class="plat-icon yt"><i class="fa-brands fa-youtube"></i></div> YouTube</div>
+        <div style="font-size:12px;color:var(--text-light);">@jaysharma</div>
+        <div class="profile-plat-num">89.7K</div>
+        <span class="sbadge pub"><i class="fa-solid fa-circle-check"></i> Connected</span>
+      </div>
+      <div class="profile-platform-row">
+        <div class="profile-plat-left"><div class="plat-icon tw"><i class="fa-brands fa-x-twitter"></i></div> Twitter / X</div>
+        <div style="font-size:12px;color:var(--text-light);">@jaysharma</div>
+        <div class="profile-plat-num">47.1K</div>
+        <span class="sbadge pub"><i class="fa-solid fa-circle-check"></i> Connected</span>
+      </div>
+      <div class="profile-platform-row">
+        <div class="profile-plat-left"><div class="plat-icon fb"><i class="fa-brands fa-facebook-f"></i></div> Facebook</div>
+        <div style="font-size:12px;color:var(--text-light);">Jay Sharma</div>
+        <div class="profile-plat-num" style="color:var(--text-light);">—</div>
+        <button class="res-btn" style="font-size:11px;padding:5px 10px;" onclick="closeModal('profileModal');openConnectionsModal()"><i class="fa-solid fa-plus"></i> Connect</button>
+      </div>
+    </div>
+
+    <!-- Recent Top Posts -->
+    <div class="profile-section">
+      <div class="profile-section-title"><i class="fa-solid fa-fire" style="color:var(--accent-orange);"></i> Top Performing Posts</div>
+      <div class="profile-recent-post">
+        <div class="profile-post-thumb"><i class="fa-brands fa-instagram"></i></div>
+        <div class="profile-post-info">
+          <div class="profile-post-title">🔥 Sunday morning vlog — beach edition</div>
+          <div class="profile-post-meta">Instagram Reel · Apr 15 · 320 likes · 48 comments</div>
+        </div>
+        <span class="sbadge pub"><i class="fa-solid fa-arrow-up"></i> 8.5%</span>
+      </div>
+      <div class="profile-recent-post">
+        <div class="profile-post-thumb"><i class="fa-brands fa-youtube"></i></div>
+        <div class="profile-post-info">
+          <div class="profile-post-title">New tutorial: editing workflow tips</div>
+          <div class="profile-post-meta">YouTube Short · Apr 14 · 280 likes · 62 comments</div>
+        </div>
+        <span class="sbadge pub"><i class="fa-solid fa-arrow-up"></i> 12.0%</span>
+      </div>
+      <div class="profile-recent-post">
+        <div class="profile-post-thumb"><i class="fa-brands fa-facebook-f"></i></div>
+        <div class="profile-post-info">
+          <div class="profile-post-title">Behind the scenes from the studio</div>
+          <div class="profile-post-meta">Facebook Photo · Apr 13 · 180 likes · 24 comments</div>
+        </div>
+        <span class="sbadge pub"><i class="fa-solid fa-arrow-up"></i> 5.2%</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="padding:16px 24px;display:flex;gap:10px;">
+      <button class="send-btn" style="margin:0;flex:1;" onclick="openPostModal();closeModal('profileModal')"><i class="fa-solid fa-plus"></i> New Post</button>
+      <button class="res-btn" style="flex:1;padding:11px;" onclick="openAnalyticsModal();closeModal('profileModal')"><i class="fa-solid fa-chart-line"></i> View Analytics</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="2_dashboard.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
